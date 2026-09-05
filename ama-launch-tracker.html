@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA 30-Day Launch Plan & Habit Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-card { border: 1px solid #cbd5e1 !important; background: white !important; color: black !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-slate-800 gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-800/50">Execution Engine</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white mt-2 sm:text-4xl">
+                    30-Day Launch Plan & Habit Tracker
+                </h1>
+                <p class="mt-1 text-slate-400 text-sm">
+                    Systematic daily execution roadmap for building and launching your micro-agency.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 no-print">
+                <button onclick="resetProgress()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm font-medium text-slate-300 transition shadow-sm">
+                    Reset Progress
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium text-white transition shadow-lg shadow-emerald-900/40 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Export Report
+                </button>
+            </div>
+        </header>
+
+        <!-- Overall Progress Bar Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl print-card">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-bold tracking-wider uppercase text-slate-300">Overall Launch Momentum</span>
+                <span id="progressPercentage" class="text-sm font-extrabold text-emerald-400">0% Completed</span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
+                <div id="progressBar" class="bg-gradient-to-r from-emerald-600 to-teal-400 h-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Week Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-4 no-print" id="weekTabs">
+            <button onclick="switchTab(1)" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-emerald-600 text-white shadow-lg shadow-emerald-950" data-week="1">Week 1: Foundation</button>
+            <button onclick="switchTab(2)" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white" data-week="2">Week 2: Setup & Offer</button>
+            <button onclick="switchTab(3)" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white" data-week="3">Week 3: Outreach & Attraction</button>
+            <button onclick="switchTab(4)" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white" data-week="4">Week 4: Scaling & Optimization</button>
+        </div>
+
+        <!-- Task Containers (Rendered dynamically based on active tab) -->
+        <div id="taskContainer" class="space-y-4">
+            <!-- Populated via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script>
+        const launchData = {
+            1: {
+                title: "Week 1: Foundation & Niche Validation",
+                description: "Establish your service parameters, analyze target audience pain points, and lock in your core offering.",
+                tasks: [
+                    { id: "w1_1", text: "Complete the Service Selection Scorecard to isolate your primary offering.", category: "Strategy" },
+                    { id: "w1_2", text: "Define your ideal client profile (ICP) and revenue targets.", category: "Research" },
+                    { id: "w1_3", text: "Draft your core value proposition and unique mechanism.", category: "Messaging" },
+                    { id: "w1_4", text: "Audit competitor pricing structures and baseline package delivery times.", category: "Research" },
+                    { id: "w1_5", text: "Establish your weekly time-blocking schedule for client acquisition.", category: "Operations" },
+                    { id: "w1_6", text: "Review and refine your professional social/portfolio presence.", category: "Branding" },
+                    { id: "w1_7", text: "Complete weekly review: Confirm niche viability score exceeds threshold.", category: "Review" }
+                ]
+            },
+            2: {
+                title: "Week 2: Offer Architecture & Tech Setup",
+                description: "Build your frictionless workflow templates, scoping documents, and automated intake funnels.",
+                tasks: [
+                    { id: "w2_1", text: "Build your standardized Scope of Work (SOW) & boundary agreement template.", category: "Operations" },
+                    { id: "w2_2", text: "Configure your client onboarding intake form and questionnaire.", category: "Tech Setup" },
+                    { id: "w2_3", text: "Set up your payment processing and invoicing workflow.", category: "Finance" },
+                    { id: "w2_4", text: "Create your core delivery asset templates (prompts, sheets, or automations).", category: "Production" },
+                    { id: "w2_5", text: "Establish standard operating procedures (SOPs) for repeatable service delivery.", category: "Operations" },
+                    { id: "w2_6", text: "Perform a dry-run test of your client delivery pipeline end-to-end.", category: "Testing" },
+                    { id: "w2_7", text: "Complete weekly review: Confirm all operational assets are deployable.", category: "Review" }
+                ]
+            },
+            3: {
+                title: "Week 3: Attraction & Outreach Deployment",
+                description: "Activate attraction marketing channels, launch content posts, and initiate direct prospect conversations.",
+                tasks: [
+                    { id: "w3_1", text: "Publish your foundational case study or authority-building post.", category: "Marketing" },
+                    { id: "w3_2", text: "Initiate daily attraction marketing outreach across chosen platforms.", category: "Outreach" },
+                    { id: "w3_3", text: "Engage with active prospect communities and answer high-intent queries.", category: "Networking" },
+                    { id: "w3_4", text: "Follow up with warm leads using structured conversational scripts.", category: "Sales" },
+                    { id: "w3_5", text: "Conduct discovery calls with prospective clients using your scorecard.", category: "Sales" },
+                    { id: "w3_6", text: "Send custom proposals and SOW documents within 24 hours of calls.", category: "Sales" },
+                    { id: "w3_7", text: "Complete weekly review: Track outreach volume and conversion ratios.", category: "Review" }
+                ]
+            },
+            4: {
+                title: "Week 4: Optimization & Client Onboarding",
+                description: "Secure your initial client contracts, streamline fulfillment, and build long-term retention frameworks.",
+                tasks: [
+                    { id: "w4_1", text: "Close your first pilot client or retainer agreement.", category: "Sales" },
+                    { id: "w4_2", text: "Execute smooth onboarding using your automated intake workflow.", category: "Operations" },
+                    { id: "w4_3", text: "Deliver initial results and gather client feedback for testimonials.", category: "Fulfillment" },
+                    { id: "w4_4", text: "Review delivery bottlenecks and optimize SOPs for speed and margin.", category: "Optimization" },
+                    { id: "w4_5", text: "Map out your scale strategy for month two (upsells or referral incentives).", category: "Strategy" },
+                    { id: "w4_6", text: "Archive successful templates and workflows for easy duplication.", category: "Operations" },
+                    { id: "w4_7", text: "Complete 30-day retrospective and plan next growth phase.", category: "Review" }
+                ]
+            }
+        };
+
+        let currentActiveWeek = 1;
+        let completedTasks = JSON.parse(localStorage.getItem('ama_launch_tracker_progress')) || {};
+
+        function switchTab(weekNum) {
+            currentActiveWeek = weekNum;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (parseInt(btn.dataset.week) === weekNum) {
+                    btn.className = "tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-emerald-600 text-white shadow-lg shadow-emerald-950";
+                } else {
+                    btn.className = "tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white";
+                }
+            });
+            renderTasks();
+        }
+
+        function toggleTask(taskId) {
+            completedTasks[taskId] = !completedTasks[taskId];
+            localStorage.setItem('ama_launch_tracker_progress', JSON.stringify(completedTasks));
+            renderTasks();
+            updateProgress();
+        }
+
+        function resetProgress() {
+            if (confirm("Reset all completion checkmarks for the 30-day launch plan?")) {
+                completedTasks = {};
+                localStorage.removeItem('ama_launch_tracker_progress');
+                renderTasks();
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            let totalTasks = 0;
+            let completedCount = 0;
+
+            Object.values(launchData).forEach(week => {
+                week.tasks.forEach(task => {
+                    totalTasks++;
+                    if (completedTasks[task.id]) {
+                        completedCount++;
+                    }
+                });
+            });
+
+            const percentage = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
+            document.getElementById('progressPercentage').textContent = `${percentage}% Completed (${completedCount}/${totalTasks})`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskContainer');
+            const weekData = launchData[currentActiveWeek];
+
+            let html = `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl print-card">
+                    <div class="mb-6 pb-4 border-b border-slate-800">
+                        <h2 class="text-xl font-bold text-white">${weekData.title}</h2>
+                        <p class="text-slate-400 text-sm mt-1">${weekData.description}</p>
+                    </div>
+                    <div class="space-y-3">
+            `;
+
+            weekData.tasks.forEach(task => {
+                const isChecked = completedTasks[task.id] ? 'checked' : '';
+                const textStyle = completedTasks[task.id] ? 'line-through text-slate-500' : 'text-slate-200';
+                
+                html += `
+                    <label class="flex items-start gap-4 p-4 bg-slate-950/60 hover:bg-slate-950 border border-slate-800/80 rounded-xl cursor-pointer transition group">
+                        <input type="checkbox" ${isChecked} onchange="toggleTask('${task.id}')" class="mt-1 w-5 h-5 accent-emerald-500 rounded cursor-pointer">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-slate-900 text-emerald-400 rounded border border-slate-800">${task.category}</span>
+                            </div>
+                            <p class="text-sm font-medium ${textStyle} transition">${task.text}</p>
+                        </div>
+                    </label>
+                `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // Initialize App on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTasks();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

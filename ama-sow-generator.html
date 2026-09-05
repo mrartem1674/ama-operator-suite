@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA Scope of Work & Boundary Generator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-document { border: none !important; background: white !important; color: black !important; box-shadow: none !important; padding: 0 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-slate-800 gap-4 no-print">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-800/50">Agreement Utility</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white mt-2 sm:text-4xl">
+                    Scope of Work & Boundary Generator
+                </h1>
+                <p class="mt-1 text-slate-400 text-sm">
+                    Generate watertight client agreements and protect your micro-agency margins instantly.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="copySOWText()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm font-medium text-slate-300 transition shadow-sm flex items-center gap-2">
+                    📋 Copy Text
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg text-sm font-medium text-white transition shadow-lg shadow-amber-900/40 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Export PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Column: Input Form (No Print) -->
+            <div class="lg:col-span-5 space-y-6 no-print">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h2 class="text-lg font-bold text-white border-b border-slate-800 pb-3">Project Parameters</h2>
+                    
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Client / Company Name</label>
+                        <input type="text" id="clientName" value="Acme Corporation" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Agency / Provider Name</label>
+                        <input type="text" id="agencyName" value="Apex Digital Media" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Project Title / Offering</label>
+                        <input type="text" id="projectTitle" value="AI Content Repurposing & Automation Retainer" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Start Date</label>
+                            <input type="date" id="startDate" value="2026-06-01" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Total Investment ($)</label>
+                            <input type="text" id="projectFee" value="2,500" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Key Deliverables (Comma separated)</label>
+                        <textarea id="deliverables" rows="3" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">12 Short-Form Video Clips, 4 Long-Form Blog Articles, Weekly Performance Report</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Revision Rounds Included</label>
+                        <input type="text" id="revisionRounds" value="2 Rounds per asset" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Out-of-Scope Hourly Rate ($)</label>
+                        <input type="text" id="hourlyRate" value="150" oninput="updateSOW()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Document Preview -->
+            <div class="lg:col-span-7">
+                <div id="previewCard" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6 print-document text-slate-300 font-sans leading-relaxed">
+                    
+                    <div class="border-b border-slate-800 pb-6 flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold tracking-widest uppercase text-amber-400">Statement of Work (SOW)</span>
+                            <h2 id="prevTitle" class="text-2xl font-black text-white mt-1">AI Content Repurposing & Automation Retainer</h2>
+                        </div>
+                        <div class="text-right text-xs text-slate-400">
+                            <p>Effective Date: <span id="prevDate">2026-06-01</span></p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-2">1. Parties & Overview</h3>
+                        <p class="text-sm">
+                            This Statement of Work ("SOW") is entered into by and between <strong id="prevAgency" class="text-white">Apex Digital Media</strong> ("Provider") and <strong id="prevClient" class="text-white">Acme Corporation</strong> ("Client") for the execution of professional digital services outlined herein.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-2">2. Scope of Deliverables</h3>
+                        <p class="text-sm mb-2">Provider agrees to deliver the following items as part of this engagement:</p>
+                        <ul id="prevDeliverablesList" class="list-disc list-inside text-sm space-y-1 text-slate-300 pl-2">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-2">3. Pricing & Payment Terms</h3>
+                        <p class="text-sm">
+                            The total investment for the scope outlined above is <strong class="text-white">$<span id="prevFee">2,500</span></strong>, payable in full prior to project kickoff or via agreed monthly retainer terms. Work will commence immediately upon receipt of initial payment.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-white mb-2">4. Revision Policy & Boundaries</h3>
+                        <p class="text-sm">
+                            Included in this agreement are <strong id="prevRevisions" class="text-white">2 Rounds per asset</strong>. Additional changes, scope expansions, or unlisted deliverables requested after approval will be billed at an out-of-scope rate of <strong class="text-white">$<span id="prevRate">150</span>/hour</strong> via formal change order.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-800 flex justify-between text-xs text-slate-500">
+                        <p>Authorized Agreement - Generated via AMA Suite</p>
+                        <p>Confidential</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script>
+        function updateSOW() {
+            const client = document.getElementById('clientName').value;
+            const agency = document.getElementById('agencyName').value;
+            const title = document.getElementById('projectTitle').value;
+            const date = document.getElementById('startDate').value;
+            const fee = document.getElementById('projectFee').value;
+            const deliverablesRaw = document.getElementById('deliverables').value;
+            const revisions = document.getElementById('revisionRounds').value;
+            const rate = document.getElementById('hourlyRate').value;
+
+            // Update preview texts
+            document.getElementById('prevTitle').textContent = title;
+            document.getElementById('prevDate').textContent = date;
+            document.getElementById('prevAgency').textContent = agency;
+            document.getElementById('prevClient').textContent = client;
+            document.getElementById('prevFee').textContent = fee;
+            document.getElementById('prevRevisions').textContent = revisions;
+            document.getElementById('prevRate').textContent = rate;
+
+            // Parse deliverables list
+            const listEl = document.getElementById('prevDeliverablesList');
+            listEl.innerHTML = '';
+            const items = deliverablesRaw.split(',').map(item => item.trim()).filter(item => item.length > 0);
+            
+            if (items.length === 0) {
+                listEl.innerHTML = `<li>No deliverables specified.</li>`;
+            } else {
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    listEl.appendChild(li);
+                });
+            }
+
+            // Save to localStorage
+            const state = { client, agency, title, date, fee, deliverablesRaw, revisions, rate };
+            localStorage.setItem('ama_sow_state', JSON.stringify(state));
+        }
+
+        function loadSOW() {
+            const saved = localStorage.getItem('ama_sow_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                document.getElementById('clientName').value = state.client || '';
+                document.getElementById('agencyName').value = state.agency || '';
+                document.getElementById('projectTitle').value = state.title || '';
+                document.getElementById('startDate').value = state.date || '';
+                document.getElementById('projectFee').value = state.fee || '';
+                document.getElementById('deliverables').value = state.deliverablesRaw || '';
+                document.getElementById('revisionRounds').value = state.revisions || '';
+                document.getElementById('hourlyRate').value = state.rate || '';
+            }
+            updateSOW();
+        }
+
+        function copySOWText() {
+            const previewText = document.getElementById('previewCard').innerText;
+            navigator.clipboard.writeText(previewText).then(() => {
+                alert("Scope of Work agreement text copied to clipboard successfully!");
+            }).catch(err => {
+                alert("Failed to copy text: " + err);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', loadSOW);
+    </script>
+</body>
+</html>

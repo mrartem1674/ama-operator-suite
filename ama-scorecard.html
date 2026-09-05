@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Micro-Agency (AMA) Service Selection Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-card { border: 1px solid #cbd5e1 !important; background: white !important; color: black !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-slate-800 gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800/50">Executive Utility</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white mt-2 sm:text-4xl">
+                    AMA Service Scorecard & Weighting Engine
+                </h1>
+                <p class="mt-1 text-slate-400 text-sm">
+                    Isolate high-leverage digital offerings with precision weighted decision algorithms.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 no-print">
+                <button onclick="resetDefaults()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm font-medium text-slate-300 transition shadow-sm">
+                    Reset Defaults
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium text-white transition shadow-lg shadow-indigo-900/40 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                    </svg> Export Report
+                </button>
+            </div>
+        </header>
+
+        <!-- Control Bar: Add Service & Weight Toggle -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900/80 backdrop-blur border border-slate-800 rounded-xl p-4 mb-8 shadow-xl gap-4 no-print">
+            <div class="flex items-center gap-3">
+                <button onclick="addService()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-semibold text-white transition flex items-center gap-2 shadow-md shadow-emerald-950">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Option
+                </button>
+                <span class="text-xs text-slate-400" id="serviceCountLabel">Evaluating 3 options</span>
+            </div>
+            <div>
+                <button onclick="toggleWeightsPanel()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium underline underline-offset-4">
+                    ⚙️ Configure Custom Weights
+                </button>
+            </div>
+        </div>
+
+        <!-- Advanced Weights Drawer (Hidden by default) -->
+        <div id="weightsPanel" class="hidden bg-slate-900 border border-indigo-500/30 rounded-xl p-6 mb-8 shadow-xl no-print">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-300 mb-3">Formula Weight Tuning (Must total 100%)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Monetization Speed Weight (%)</label>
+                    <input type="number" id="wSpeed" value="30" oninput="appState.weights.speed = this.value/100; saveData(); calculate()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Setup Friction Weight (%)</label>
+                    <input type="number" id="wFriction" value="30" oninput="appState.weights.friction = this.value/100; saveData(); calculate()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Skill Viability Weight (%)</label>
+                    <input type="number" id="wSkill" value="20" oninput="appState.weights.skill = this.value/100; saveData(); calculate()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Scalability & Margin Weight (%)</label>
+                    <input type="number" id="wScale" value="20" oninput="appState.weights.scale = this.value/100; saveData(); calculate()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Service Grid -->
+        <div id="servicesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Rendered dynamically via JavaScript -->
+        </div>
+
+        <!-- Recommendation Banner -->
+        <div id="recommendationCard" class="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 border border-indigo-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden print-card">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-xl">🏆</span>
+                <h3 class="text-xs font-bold tracking-widest uppercase text-indigo-400">Optimal Strategic Recommendation</h3>
+            </div>
+            <p id="winnerAnnouncement" class="text-2xl font-extrabold text-white mt-1">Analyzing Matrix...</p>
+            <p id="winnerDescription" class="text-slate-300 text-sm mt-2 leading-relaxed">Adjust input scores above to instantly calculate optimal alignment for speed, margin, and technical ease.</p>
+        </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script>
+        // Default State Configuration
+        const defaultState = {
+            weights: { speed: 0.3, friction: 0.3, skill: 0.2, scale: 0.2 },
+            services: [
+                { id: 1, name: "AI Content Repurposing", skill: 4, friction: 4, speed: 5, scale: 3 },
+                { id: 2, name: "Local SEO & Review Automation", skill: 5, friction: 5, speed: 4, scale: 4 },
+                { id: 3, name: "Custom Chatbot Support Bots", skill: 2, friction: 3, speed: 3, scale: 5 }
+            ]
+        };
+
+        let appState = JSON.parse(localStorage.getItem('ama_scorecard_state')) || defaultState;
+
+        function saveData() {
+            localStorage.setItem('ama_scorecard_state', JSON.stringify(appState));
+        }
+
+        function toggleWeightsPanel() {
+            const panel = document.getElementById('weightsPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function resetDefaults() {
+            if (confirm("Reset all services and weights to default values?")) {
+                appState = JSON.parse(JSON.stringify(defaultState));
+                saveData();
+                initApp();
+            }
+        }
+
+        function addService() {
+            if (appState.services.length >= 5) {
+                alert("Maximum of 5 services can be compared simultaneously for layout clarity.");
+                return;
+            }
+            const newId = appState.services.length > 0 ? Math.max(...appState.services.map(s => s.id)) + 1 : 1;
+            appState.services.push({
+                id: newId,
+                name: `New Service Option ${newId}`,
+                skill: 3,
+                friction: 3,
+                speed: 3,
+                scale: 3
+            });
+            saveData();
+            initApp();
+        }
+
+        function removeService(id) {
+            if (appState.services.length <= 2) {
+                alert("You must evaluate at least 2 options.");
+                return;
+            }
+            appState.services = appState.services.filter(s => s.id !== id);
+            saveData();
+            initApp();
+        }
+
+        function updateField(id, field, value) {
+            const service = appState.services.find(s => s.id === id);
+            if (service) {
+                service[field] = field === 'name' ? value : parseFloat(value) || 0;
+                saveData();
+                calculate();
+            }
+        }
+
+        function initApp() {
+            // Sync weight inputs
+            document.getElementById('wSpeed').value = appState.weights.speed * 100;
+            document.getElementById('wFriction').value = appState.weights.friction * 100;
+            document.getElementById('wSkill').value = appState.weights.skill * 100;
+            document.getElementById('wScale').value = appState.weights.scale * 100;
+
+            document.getElementById('serviceCountLabel').textContent = `Evaluating ${appState.services.length} options`;
+
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = '';
+
+            appState.services.forEach((service, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between print-card relative";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Option ${index + 1}</span>
+                            ${appState.services.length > 2 ? `<button onclick="removeService(${service.id})" class="text-slate-500 hover:text-red-400 text-xs no-print">✕ Remove</button>` : ''}
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Service Title</label>
+                            <input type="text" value="${service.name}" oninput="updateField(${service.id}, 'name', this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Skill Time Viability</span>
+                                    <span class="font-bold text-slate-200">${service.skill}/5</span>
+                                </div>
+                                <input type="range" min="1" max="5" value="${service.skill}" oninput="updateField(${service.id}, 'skill', this.value); initApp();" class="w-full accent-indigo-500 cursor-pointer">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Setup Friction (Ease)</span>
+                                    <span class="font-bold text-slate-200">${service.friction}/5</span>
+                                </div>
+                                <input type="range" min="1" max="5" value="${service.friction}" oninput="updateField(${service.id}, 'friction', this.value); initApp();" class="w-full accent-indigo-500 cursor-pointer">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Monetization Speed</span>
+                                    <span class="font-bold text-slate-200">${service.speed}/5</span>
+                                </div>
+                                <input type="range" min="1" max="5" value="${service.speed}" oninput="updateField(${service.id}, 'speed', this.value); initApp();" class="w-full accent-indigo-500 cursor-pointer">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Scalability & Margin</span>
+                                    <span class="font-bold text-slate-200">${service.scale}/5</span>
+                                </div>
+                                <input type="range" min="1" max="5" value="${service.scale}" oninput="updateField(${service.id}, 'scale', this.value); initApp();" class="w-full accent-indigo-500 cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex justify-between items-center bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-2xl">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Weighted Score</span>
+                        <div class="text-2xl font-black text-indigo-400 score-display" data-id="${service.id}">0.00</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            calculate();
+        }
+
+        function calculate() {
+            let bestScore = -1;
+            let winningService = null;
+
+            appState.services.forEach(service => {
+                const score = 
+                    (service.speed * appState.weights.speed) +
+                    (service.friction * appState.weights.friction) +
+                    (service.skill * appState.weights.skill) +
+                    (service.scale * appState.weights.scale);
+
+                const displayEl = document.querySelector(`.score-display[data-id="${service.id}"]`);
+                if (displayEl) {
+                    displayEl.textContent = score.toFixed(2);
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    winningService = service;
+                }
+            });
+
+            const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+            const winnerDescription = document.getElementById('winnerDescription');
+
+            if (winningService && bestScore > 0) {
+                winnerAnnouncement.textContent = `🏆 ${winningService.name} (Score: ${bestScore.toFixed(2)} / 5.00)`;
+                winnerDescription.textContent = `This offering achieves the optimal strategic threshold based on your current weight matrix. Prioritize packaging and client outreach around this specific service model.`;
+            } else {
+                winnerAnnouncement.textContent = `Configure valid parameters.`;
+                winnerDescription.textContent = `Ensure all scoring variables are correctly set between 1 and 5.`;
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

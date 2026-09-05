@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA Micro-Agency Margin & Pricing Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-card { border: 1px solid #cbd5e1 !important; background: white !important; color: black !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-slate-800 gap-4 no-print">
+            <div>
+                <span class="text-xs font-bold tracking-widest uppercase text-purple-400 bg-purple-950/80 px-3 py-1 rounded-full border border-purple-800/50">Financial Utility</span>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white mt-2 sm:text-4xl">
+                    Margin & Pricing Calculator
+                </h1>
+                <p class="mt-1 text-slate-400 text-sm">
+                    Eliminate pricing panic and calculate high-margin fixed packages based on your income goals[cite: 1].
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="resetCalculator()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg text-sm font-medium text-slate-300 transition shadow-sm">
+                    Reset Defaults
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm font-medium text-white transition shadow-lg shadow-purple-900/40 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Export Report
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Column: Inputs (No Print) -->
+            <div class="lg:col-span-5 space-y-6 no-print">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h2 class="text-lg font-bold text-white border-b border-slate-800 pb-3">Financial Parameters</h2>
+                    
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Target Monthly Net Income ($)</label>
+                        <input type="number" id="targetIncome" value="5000" oninput="calculateFinancials()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Monthly Software & Overhead Costs ($)</label>
+                        <input type="number" id="monthlyOverhead" value="150" oninput="calculateFinancials()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Billable Hours Available per Month</label>
+                        <input type="number" id="monthlyHours" value="80" oninput="calculateFinancials()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Estimated Delivery Hours per Client Package</label>
+                        <input type="number" id="hoursPerClient" value="10" oninput="calculateFinancials()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Desired Profit Margin Buffer (%)</label>
+                        <input type="number" id="profitBuffer" value="30" oninput="calculateFinancials()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Outputs & Analysis -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Summary Metrics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl print-card">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Minimum Hourly Rate</span>
+                        <div id="resHourlyRate" class="text-3xl font-black text-white mt-2">$0.00 /hr</div>
+                        <p class="text-xs text-slate-500 mt-1">Break-even rate including overhead</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl print-card">
+                        <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Recommended Package Price</span>
+                        <div id="resPackagePrice" class="text-3xl font-black text-purple-400 mt-2">$0.00</div>
+                        <p class="text-xs text-slate-500 mt-1">Includes your profit buffer and value scale</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Breakdown Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl print-card space-y-4">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-white border-b border-slate-800 pb-3">Operational Insights & Targets</h3>
+                    
+                    <div class="flex justify-between items-center text-sm py-2 border-b border-slate-800/50">
+                        <span class="text-slate-400">Total Monthly Revenue Required:</span>
+                        <span id="resTotalRevenue" class="font-bold text-white">$0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm py-2 border-b border-slate-800/50">
+                        <span class="text-slate-400">Clients Needed per Month (to hit target):</span>
+                        <span id="resClientsNeeded" class="font-bold text-white">0 clients</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm py-2">
+                        <span class="text-slate-400">Effective Value Multiplier:</span>
+                        <span id="resMultiplier" class="font-bold text-purple-400">1.3x Standard</span>
+                    </div>
+                </div>
+
+                <!-- Strategic Advice Box -->
+                <div class="bg-gradient-to-br from-purple-950 via-slate-900 to-slate-900 border border-purple-500/30 rounded-2xl p-6 shadow-xl print-card">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-purple-300 mb-1">💡 Margin Mindset Recommendation</h3>
+                    <p id="resAdvice" class="text-sm text-slate-300 mt-2 leading-relaxed">
+                        Loading strategic pricing analysis...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script>
+        function calculateFinancials() {
+            const income = parseFloat(document.getElementById('targetIncome').value) || 0;
+            const overhead = parseFloat(document.getElementById('monthlyOverhead').value) || 0;
+            const hours = parseFloat(document.getElementById('monthlyHours').value) || 1;
+            const clientHours = parseFloat(document.getElementById('hoursPerClient').value) || 1;
+            const buffer = parseFloat(document.getElementById('profitBuffer').value) || 0;
+
+            const totalRevenueNeeded = income + overhead;
+            const rawHourlyRate = totalRevenueNeeded / hours;
+            const bufferedHourlyRate = rawHourlyRate * (1 + (buffer / 100));
+            const recommendedPackagePrice = bufferedHourlyRate * clientHours;
+            
+            const totalClientsNeeded = clientHours > 0 ? Math.ceil(hours / clientHours) : 0;
+
+            // Update DOM
+            document.getElementById('resHourlyRate').textContent = `$${bufferedHourlyRate.toFixed(2)} /hr`;
+            document.getElementById('resPackagePrice').textContent = `$${recommendedPackagePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('resTotalRevenue').textContent = `$${totalRevenueNeeded.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('resClientsNeeded').textContent = `${totalClientsNeeded} full packages / month`;
+            document.getElementById('resMultiplier').textContent = `${(1 + buffer/100).toFixed(2)}x Value Markup`;
+
+            // Dynamic Advice Generation
+            const adviceEl = document.getElementById('resAdvice');
+            if (bufferedHourlyRate < 50) {
+                adviceEl.textContent = `Your calculated rate is lean. Consider packaging your service as a fixed-fee outcome rather than hourly to decouple your income from time limitations and capture higher perceived client value[cite: 1].`;
+            } else {
+                adviceEl.textContent = `Your pricing model reflects healthy margins. Focus your outreach on positioning this package around the business outcomes and time-savings you deliver to clients rather than software mechanics[cite: 1].`;
+            }
+
+            // Save State
+            const state = { income, overhead, hours, clientHours, buffer };
+            localStorage.setItem('ama_pricing_state', JSON.stringify(state));
+        }
+
+        function resetCalculator() {
+            if (confirm("Reset pricing parameters to default values?")) {
+                document.getElementById('targetIncome').value = 5000;
+                document.getElementById('monthlyOverhead').value = 150;
+                document.getElementById('monthlyHours').value = 80;
+                document.getElementById('hoursPerClient').value = 10;
+                document.getElementById('profitBuffer').value = 30;
+                localStorage.removeItem('ama_pricing_state');
+                calculateFinancials();
+            }
+        }
+
+        function loadCalculator() {
+            const saved = localStorage.getItem('ama_pricing_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                document.getElementById('targetIncome').value = state.income ?? 5000;
+                document.getElementById('monthlyOverhead').value = state.overhead ?? 150;
+                document.getElementById('monthlyHours').value = state.hours ?? 80;
+                document.getElementById('hoursPerClient').value = state.clientHours ?? 10;
+                document.getElementById('profitBuffer').value = state.buffer ?? 30;
+            }
+            calculateFinancials();
+        }
+
+        window.addEventListener('DOMContentLoaded', loadCalculator);
+    </script>
+</body>
+</html>

